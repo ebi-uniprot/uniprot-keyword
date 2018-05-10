@@ -1,6 +1,16 @@
 # uniprot-keyword
 REST API for UniProtKB supporting data keywords see https://www.uniprot.org/keywords/
 
+## Technologies
+* Java 8
+* Spring boot 2.0.1
+* Embedded neo4j 3
+* Maven 3.5.2
+* Junit 5.01
+* Mockito 2.15
+* jackson 2.9.5
+* assertj 3.9.1
+
 ## Code Explanation
 1. Package name convention, using the plural for packages with homogeneous contents and the singular for packages with heterogeneous contents.
 1. Main Class uk.ac.ebi.uniprot.uniprotkeyword.UniprotKeywordApplication
