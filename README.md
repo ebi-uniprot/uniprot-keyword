@@ -11,6 +11,27 @@ REST API for UniProtKB supporting data keywords see https://www.uniprot.org/keyw
 * jackson 2.9.5
 * assertj 3.9.1
 
+## Getting started
+1. Download keyword data file from ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/docs/keywlist.txt on local file system
+1. Download/clone the code from github `git clone https://github.com/ebi-uniprot/uniprot-keyword.git`
+1. Open file *uniprot-keyword/src/main/resources/application.properties* and change the value **spring.data.neo4j.uri=file://** with the path where you want to create your neo4j database 
+1. Go to uniprot-keyword directory from terminal/command prompt
+1. run command `mvn package`
+1. For First time only (import data into database from txt file) run command `java -jar target/uniprot-keyword-0.0.1-SNAPSHOT.jar keywlist.txt`
+  1. It will delete existing database first and then start to import data
+  1. **Note:** I have downloaded *keywlist.txt* file in same directory. You have give the complete path of file if it is not in same directory
+  1. Server will remain started and entertain requests
+  1. If you want to stop server and just want to import data use `java -jar target/uniprot-keyword-0.0.1-SNAPSHOT.jar subcell.txt --stopserver`
+1. To start server second time (without import) use `java -jar target/uniprot-keyword-0.0.1-SNAPSHOT.jar`
+
+## Endpoints
+Endpoint | Description
+-------- | -----------
+http://localhost:8080/accession/KW-0001 | Return the single keyword entry with all depth relationships exact match on accession=KW-0001
+http://localhost:8080/identifier/3D-structure | Return single keyword entry with all depth relationships exact match on identifier=3D-structure with case-sensitive
+http://localhost:8080/identifier/all/2s | Returns the collection of all the matching keywords which contains the "2s" after ignoring case in identifiers. Return elements in list will resolve relationships at depth 1
+http://localhost:8080/search/2s 4s | Returns the unique collection of all the matching keywords which contains the "2s" or "4s" after ignoring case in identifier or accession or synonyms or definition. Return elements in collection will contain relationships at depth level 1
+
 ## Code Explanation
 1. Package name convention, using the plural for packages with homogeneous contents and the singular for packages with heterogeneous contents.
 1. Main Class uk.ac.ebi.uniprot.uniprotkeyword.UniprotKeywordApplication
