@@ -22,7 +22,7 @@ REST API for UniProtKB supporting data keywords see https://www.uniprot.org/keyw
   1. It will delete existing database first and then start to import data
   1. **Note:** I have downloaded *keywlist.txt* file in same directory. You have give the complete path of file if it is not in same directory
   1. Server will remain started and entertain requests
-  1. If you want to stop server and just want to import data use `java -jar target/uniprot-keyword-0.0.1-SNAPSHOT.jar subcell.txt --stopserver`
+  1. If you want to stop server and just want to import data use `java -jar target/uniprot-keyword-0.0.1-SNAPSHOT.jar keywlist.txt --stopserver`
 1. To start server second time (without import) use `java -jar target/uniprot-keyword-0.0.1-SNAPSHOT.jar`
 
 ## Endpoints

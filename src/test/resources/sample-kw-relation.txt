@@ -1,0 +1,97 @@
+---------------------------------------------------------------------------
+        UniProt Knowledgebase:
+          Swiss-Prot Protein Knowledgebase
+          TrEMBL Protein Database
+        SIB Swiss Institute of Bioinformatics; Geneva, Switzerland
+        European Bioinformatics Institute (EBI); Hinxton, United Kingdom
+        Protein Information Resource (PIR); Washington DC, USA
+---------------------------------------------------------------------------
+
+Description: Controlled vocabulary of keywords
+Name:        keywlist.txt
+Release:     2018_04 of 25-Apr-2018
+
+---------------------------------------------------------------------------
+
+  This document lists the keywords and categories used in the UniProt
+  knowledgebase (Swiss-Prot and TrEMBL). The keywords are classified into
+  the following 10 categories:
+
+    * Biological process
+    * Cellular component
+    * Coding sequence diversity
+    * Developmental stage
+    * Disease
+    * Domain
+    * Ligand
+    * Molecular function
+    * PTM
+    * Technical term
+
+  The definition of the keywords and categories usage as well as other
+  information is provided in the following format:
+
+  ---------  ---------------------------     ------------------------------
+  Line code  Content                         Occurrence in an entry
+  ---------  ---------------------------     ------------------------------
+  ID         Identifier (keyword)            Once; starts a keyword entry
+  IC         Identifier (category)           Once; starts a category entry
+  AC         Accession (KW-xxxx)             Once
+  DE         Definition                      Once or more
+  SY         Synonyms                        Optional; once or more
+  GO         Gene ontology (GO) mapping      Optional; once or more
+  HI         Hierarchy                       Optional; once or more
+  WW         Relevant WWW site               Optional; once or more
+  CA         Category                        Once per keyword entry;
+                                             absent in category entries
+  //         Terminator                      Once; ends an entry
+
+___________________________________________________________________________
+ID   2Fe-2S.
+AC   KW-0001
+DE   Protein which contains at least one 2Fe-2S iron-sulfur cluster: 2 iron
+DE   atoms complexed to 2 inorganic sulfides and 4 sulfur atoms of
+DE   cysteines from the protein.
+SY   [2Fe-2S] cluster; [Fe2S2] cluster; 2 iron, 2 sulfur cluster binding;
+SY   Di-mu-sulfido-diiron; Fe2/S2 (inorganic) cluster; Fe2S2.
+GO   GO:0051537; 2 iron, 2 sulfur cluster binding
+HI   Ligand: Iron; Iron-sulfur; 2Fe-2S.
+HI   Ligand: Metal-binding; Iron-sulfur; 2Fe-2S.
+HI   Ligand: Metal-binding; 2Fe-2S.
+CA   Ligand.
+//
+ID   Iron-sulfur.
+AC   KW-0411
+DE   Protein which binds at least one iron-sulfur cluster, e.g. 2Fe-2S,
+DE   3Fe-4S, 4Fe-4S.
+SY   Iron-sulfur cluster.
+GO   GO:0051536; iron-sulfur cluster binding
+HI   Ligand: Iron; Iron-sulfur.
+HI   Ligand: Metal-binding; Iron-sulfur.
+CA   Ligand.
+//
+ID   Metal-binding.
+AC   KW-0479
+DE   Protein which binds metals.
+GO   GO:0046872; metal ion binding
+HI   Ligand: Metal-binding.
+CA   Ligand.
+//
+ID   Iron.
+AC   KW-0408
+DE   Protein which binds at least one iron atom, or protein whose function
+DE   is iron-dependent. Iron is a metal, chemical symbol Fe.
+SY   Fe; Fe cation; Fe ion; Iron cation; Iron ion.
+HI   Ligand: Iron.
+WW   http://www.webelements.com/iron/
+CA   Ligand.
+//
+IC   Ligand.
+AC   KW-9993
+DE   Keywords assigned to proteins because they bind, are associated with,
+DE   or whose activity is dependent of some molecule.
+//
+-----------------------------------------------------------------------
+Copyrighted by the UniProt Consortium, see https://www.uniprot.org/terms
+Distributed under the Creative Commons Attribution-NoDerivs License
+-----------------------------------------------------------------------

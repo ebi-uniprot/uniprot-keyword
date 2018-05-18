@@ -1,0 +1,41 @@
+___________________________________________________________________________
+ID   3D-structure.
+AC   KW-0002
+DE   Protein, or part of a protein, whose three-dimensional structure has
+DE   been resolved experimentally (for example by X-ray crystallography or
+DE   NMR spectroscopy) and whose coordinates are available in the PDB
+DE   database. Can also be used for theoretical models.
+HI   Technical term: 3D-structure.
+CA   Technical term.
+//
+ID   Complete proteome.
+AC   KW-0181
+DE   Protein which is part of a proteome. A proteome is the set of protein
+DE   sequences that can be derived by translation of all protein coding
+DE   genes of a completely sequenced genome, including alternative products
+DE   such as splice variants for those species in which these may occur.
+DE   Proteomes may include protein sequences from both the reviewed
+DE   (UniProtKB /Swiss-Prot) and unreviewed (UniProtKB/TrEMBL) sections of
+DE   the UniProt Knowledgebase. Note that some proportion of the predicted
+DE   protein sequences of a given proteome may require further review or
+DE   correction. The precise proportion depends on the relative
+DE   distributions of protein sequences between the two sections of
+DE   UniProtKB and the quality of the underlying genome sequence and gene
+DE   predictions.
+HI   Technical term: Complete proteome.
+WW   https://www.uniprot.org/help/proteome
+WW   https://www.uniprot.org/help/retrieve_sets
+CA   Technical term.
+//
+ID   Direct protein sequencing.
+AC   KW-0903
+DE   Protein, whose amino acid sequence has been partially (more than one
+DE   residue) or completely determined experimentally by Edman degradation
+DE   or by mass spectrometry.
+HI   Technical term: Direct protein sequencing.
+CA   Technical term.
+//
+IC   Technical term.
+AC   KW-9990
+DE   Keywords assigned to proteins according to 'technical' reasons.
+//
