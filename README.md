@@ -1,6 +1,10 @@
 # uniprot-keyword
 REST API for UniProtKB supporting data keywords see https://www.uniprot.org/keywords/
 
+UniProtKB (Universal Protein Knowledge Base) is a collection of functional information on proteins. UniProtKB entries are tagged with keywords (controlled vocabulary) that can be used to retrieve particular subsets of entries. These keyword belongs to categories and have complex structure in it self. They can have hierarchies, synonyms, gene ontology and definition. User (website/machine) can use this REST API to search or get all information about keywords used in UniProtKB.
+
+Standalone application, you need java8 and maven to startup.
+
 ## Technologies
 * Java 8
 * Spring boot 2.0.1
@@ -38,7 +42,7 @@ You can build image [locally](docker) as well as use docker hub to pull image.
 
 to pull from docker hub and start container in backgroud
 ```
-docker run -d -p8080:8080 --name subcell impo/keyword_api:2018_04
+docker run -d -p8080:8080 --name keyword impo/keyword_api:2018_04
 ```
 Need any help regarding git commands see [git](https://github.com/rizwan-ishtiaq/wiki/blob/master/commands/docker.txt) for quick reference.
 
