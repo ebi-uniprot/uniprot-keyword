@@ -1,5 +1,5 @@
 ### Build local 
-docker build -f docker/Dockerfile -t subcell_api https://github.com/ebi-uniprot/uniprot-keyword.git
+docker build -f docker/Dockerfile -t keyword_api https://github.com/ebi-uniprot/uniprot-keyword.git
 
 ### Multi-build Dockerfile
 1. complie source code and create target jar
