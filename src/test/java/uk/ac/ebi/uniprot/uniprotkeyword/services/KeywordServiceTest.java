@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 class KeywordServiceTest {
     @Mock
     private KeywordRepository repo;
-    private KeywordService KeywordService;
+    private KeywordService keywordService;
     private static List<Keyword> data;
 
     @BeforeAll
@@ -34,13 +34,13 @@ class KeywordServiceTest {
 
     @BeforeEach
     void setup() {
-        KeywordService = new KeywordService(repo);
+        keywordService = new KeywordService(repo);
     }
 
     @Test
     void findByAccessionShouldReturnFirstResultInRepoList() {
         when(repo.findByAccession(anyString())).thenReturn(data);
-        Keyword found = KeywordService.findByAccession("KW-0217");
+        Keyword found = keywordService.findByAccession("KW-0217");
         assertNotNull(found);
         assertEquals("Developmental protein", found.getIdentifier());
     }
@@ -50,7 +50,7 @@ class KeywordServiceTest {
         when(repo.findByIdentifier(anyString()))
                 .thenReturn(Arrays.asList(data.get(2), data.get(0), data.get(1)));
 
-        Keyword found = KeywordService.findByIdentifier("Diabetes insipidus");
+        Keyword found = keywordService.findByIdentifier("Diabetes insipidus");
         assertNotNull(found);
         assertEquals("KW-0218", found.getAccession());
     }
@@ -58,7 +58,7 @@ class KeywordServiceTest {
     @Test
     void findByIdentifierIgnoreCaseLikeShouldAddStarInParam() {
         when(repo.findByIdentifierIgnoreCaseLike(eq("*i*"))).thenReturn(data);
-        Collection<Keyword> retCol = KeywordService.findByIdentifierIgnoreCaseLike("i");
+        Collection<Keyword> retCol = keywordService.findByIdentifierIgnoreCaseLike("i");
         assertNotNull(retCol);
         assertEquals(3, retCol.size());
     }
@@ -66,7 +66,7 @@ class KeywordServiceTest {
     @Test
     void importEntriesNullPassNoException() {
         doAnswer(returnsFirstArg()).when(repo).saveAll(anyCollection());
-        KeywordService.importKeywordEntriesFromFileIntoDb(null);
+        keywordService.importKeywordEntriesFromFileIntoDb(null);
     }
 
     @Test
@@ -91,7 +91,7 @@ class KeywordServiceTest {
                 .findByIdentifierIgnoreCaseLikeOrAccessionIgnoreCaseLikeOrSynonymsIgnoreCaseLikeOrDefinitionIgnoreCaseLike(
                         eq(input), eq(input), eq(input), eq(input));
 
-        Collection<Keyword> retCol = KeywordService.findAllByKeyWordSearch("inNer Outer INNER man noT");
+        Collection<Keyword> retCol = keywordService.findAllByKeyWordSearch("inNer Outer INNER man noT");
         assertNotNull(retCol);
         assertEquals(3, retCol.size());
 

@@ -96,7 +96,7 @@ class DefaultControllerIT {
         assertEquals(HttpStatus.OK, rawRes.getStatusCode());
         assertEquals(MediaType.APPLICATION_JSON_UTF8, rawRes.getHeaders().getContentType());
 
-        List<Keyword> retCol = mapper.readValue(rawRes.getBody(), new TypeReference() {});
+        List<Keyword> retCol = mapper.readValue(rawRes.getBody(), new TypeReference<List<Keyword>>() {});
         assertEquals(19, retCol.size());
     }
 

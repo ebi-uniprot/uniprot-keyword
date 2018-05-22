@@ -14,7 +14,10 @@ public class ParseReferenceCountLines {
     private static final Logger LOG = LoggerFactory.getLogger(ParseReferenceCountLines.class);
 
     public Collection<KeywordReferenceCount> parseLines(List<String> lines) {
-        assert (lines != null);
+
+        if (lines == null) {
+            throw new IllegalArgumentException("List can be empty but not NULL");
+        }
 
         Map<String, KeywordReferenceCount> tempMap = new HashMap<>(600);
         lines.stream();
@@ -55,11 +58,7 @@ public class ParseReferenceCountLines {
     private boolean isValidRecord(String line) {
         line = line == null ? "" : line.trim();
 
-        if (line.isEmpty()) {
-            return false;
-        } else if (line.startsWith("#")) {
-            return false;
-        } else if (line.split(SEPARATOR).length < 3) {
+        if (line.isEmpty() || line.startsWith("#") || line.split(SEPARATOR).length < 3) {
             return false;
         }
 

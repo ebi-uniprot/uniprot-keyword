@@ -40,7 +40,7 @@ public class ParseReferenceCountLinesTest {
 
     @Test
     void passingNullToParser() {
-        assertThrows(AssertionError.class, () -> obj.parseLines(null));
+        assertThrows(IllegalArgumentException.class, () -> obj.parseLines(null));
     }
 
     @Test

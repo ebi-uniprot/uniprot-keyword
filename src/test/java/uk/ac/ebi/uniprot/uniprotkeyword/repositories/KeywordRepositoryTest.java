@@ -19,9 +19,10 @@ import static org.assertj.core.api.Assertions.*;
 
 @DataNeo4jTest
 @ExtendWith(SpringExtension.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) class KeywordRepositoryTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class KeywordRepositoryTest {
 
-    private static List<Keyword> keywordList;
+    private static final String ACCESSION_PROP = "accession";
 
     @Autowired
     private KeywordRepository repo;
@@ -30,8 +31,8 @@ import static org.assertj.core.api.Assertions.*;
     void setupAll() {
         final CombineKeywordReferenceCount obj = new CombineKeywordReferenceCount();
         final String sampleDataFilePath = ClassLoader.getSystemResource("sample-kw-relation.txt").getPath();
-        KeywordRepositoryTest.keywordList = obj.readFileImportAndCombine(sampleDataFilePath, null);
-        repo.saveAll(KeywordRepositoryTest.keywordList);
+        final List<Keyword> keywordList = obj.readFileImportAndCombine(sampleDataFilePath, null);
+        repo.saveAll(keywordList);
     }
 
     /**
@@ -48,14 +49,16 @@ import static org.assertj.core.api.Assertions.*;
                     assertAll(
                             () -> assertEquals("KW-0001", top.getAccession()),
                             () -> assertThat(top.getSynonyms()).isNotNull().hasSize(6),
-                            () -> assertThat(top.getCategory()).isNotNull().extracting("accession").contains("KW-9993"),
+                            () -> assertThat(top.getCategory()).isNotNull().extracting(ACCESSION_PROP)
+                                    .contains("KW-9993"),
                             () -> assertThat(top.getGoMappings()).isNotNull().hasSize(1)
                                     .anyMatch(go -> go.getGoId().equals("GO:0051537") && go.getDefinition().equals
                                             ("2 iron, 2 sulfur cluster binding"))
                     );
                     assertAll(
                             () -> assertThat(top.getHierarchy()).isNotNull().hasSize(2),
-                            () -> assertThat(top.getHierarchy()).extracting("accession").contains("KW-0411", "KW-0479")
+                            () -> assertThat(top.getHierarchy()).extracting(ACCESSION_PROP)
+                                    .contains("KW-0411", "KW-0479")
                     );
                     assertAll(
                             () -> {
@@ -63,7 +66,7 @@ import static org.assertj.core.api.Assertions.*;
                                         top.getHierarchy().stream().filter(k -> k.getAccession().equals("KW-0411"))
                                                 .findFirst().get();
                                 assertAll(
-                                        () -> assertThat(parent.getCategory()).isNotNull().extracting("accession")
+                                        () -> assertThat(parent.getCategory()).isNotNull().extracting(ACCESSION_PROP)
                                                 .contains("KW-9993"),
                                         () -> assertThat(parent.getGoMappings()).isNotNull().hasSize(1)
                                                 .anyMatch(go -> go.getGoId().equals("GO:0051536") &&
@@ -72,7 +75,7 @@ import static org.assertj.core.api.Assertions.*;
                                 );
                                 assertAll(
                                         () -> assertThat(parent.getHierarchy()).isNotNull().hasSize(2),
-                                        () -> assertThat(parent.getHierarchy()).extracting("accession")
+                                        () -> assertThat(parent.getHierarchy()).extracting(ACCESSION_PROP)
                                                 .contains("KW-0408",
                                                         "KW-0479")
                                 );
@@ -90,13 +93,12 @@ import static org.assertj.core.api.Assertions.*;
         final String id = "*I*";
         final Collection<Keyword> result = repo.findByIdentifierIgnoreCaseLike(id);
         assertThat(result).isNotNull().hasSize(4);
-        assertThat(result).extracting("accession").doesNotContain("KW-0001");
+        assertThat(result).extracting(ACCESSION_PROP).doesNotContain("KW-0001");
 
         //All keyword should be category attached
         result.stream().filter(k -> !k.isCategoryMarker()).forEach(
-                keyword -> {
-                    assertThat(keyword.getCategory()).extracting("accession").contains("KW-9993");
-                }
+                keyword -> assertThat(keyword.getCategory()).extracting(ACCESSION_PROP).contains("KW-9993")
+
         );
     }
 
@@ -123,7 +125,7 @@ import static org.assertj.core.api.Assertions.*;
                 .findByIdentifierIgnoreCaseLikeOrAccessionIgnoreCaseLikeOrSynonymsIgnoreCaseLikeOrDefinitionIgnoreCaseLike(
                         input, input, input, input);
         assertNotNull(retCol);
-        assertEquals( 2, retCol.size());
+        assertEquals(2, retCol.size());
     }
 
 }

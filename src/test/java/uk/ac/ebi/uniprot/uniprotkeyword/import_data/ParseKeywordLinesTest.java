@@ -43,7 +43,7 @@ class ParseKeywordLinesTest {
     void testKeywordParse() {
 
         final List<String> input =
-                Arrays.asList("_______________________________",
+                Arrays.asList("______________________________",
                         "ID   2Fe-2S.",
                         "AC   KW-0001",
                         "DE   Protein which contains at least one 2Fe-2S iron-sulfur cluster: 2 iron",
@@ -77,7 +77,7 @@ class ParseKeywordLinesTest {
     @DisplayName("Category and Relationship test")
     void relationShipTest() {
         final List<String> input =
-                Arrays.asList("_______________________________",
+                Arrays.asList("_____________________________",
                         "ID   2Fe-2S.",
                         "AC   KW-0001",
                         "HI   Ligand: Iron; Iron-sulfur; 2Fe-2S.",
@@ -95,7 +95,7 @@ class ParseKeywordLinesTest {
                         "AC   KW-0479",
                         "//");
         final List<Keyword> retList = obj.parseLines(input);
-        final Keyword kw = retList.stream().filter(k -> k.getIdentifier().equals("2Fe-2S")).findFirst().get();
+        final Keyword kw = retList.stream().filter(k -> k.getIdentifier().equals("2Fe-2S")).findFirst().orElseGet(null);
         assertNotNull(kw);
 
         assertNotNull(kw.getCategory());
@@ -111,7 +111,7 @@ class ParseKeywordLinesTest {
     @DisplayName("No Category and Relationship test on keyword")
     void noRelationTest() {
         final List<String> input =
-                Arrays.asList("_______________________________",
+                Arrays.asList("____________________________",
                         "ID   Tungsten.",
                         "AC   KW-0826",
                         "HI   Ligand: Tungsten.",

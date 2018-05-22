@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +23,7 @@ public class CombineKeywordReferenceCount {
             allLines = Files.readAllLines(Paths.get(keywordFilePath));
         } catch (IOException e) {
             LOG.error("Exception Handle gracefully: Failed to read file {} ", keywordFilePath, e);
-            allLines = Collections.EMPTY_LIST;
+            allLines = Collections.emptyList();
         }
         LOG.debug("total {} lines found in file ", allLines.size());
 
@@ -37,7 +36,7 @@ public class CombineKeywordReferenceCount {
             allLines = Files.readAllLines(Paths.get(referenceCountFilePath));
         } catch (IOException e) {
             LOG.error("Exception Handle gracefully: Failed to read file {} ", referenceCountFilePath, e);
-            allLines = Collections.EMPTY_LIST;
+            allLines = Collections.emptyList();
         }
         LOG.debug("total {} lines found in file ", allLines.size());
 
@@ -52,29 +51,19 @@ public class CombineKeywordReferenceCount {
 
     private void updateKeywordsWithReferenceCount(List<Keyword> keywordList,
             Collection<KeywordReferenceCount> referenceCountList) {
-        // Loop on reference count list
+        // Loop on reference count list including keywords and category
         referenceCountList.forEach(
-                rc -> {
-                    // Find the keyword from keyword list
-                    keywordList.stream().filter(k -> k.getAccession().equals(rc.getAccession())).findFirst()
-                            .ifPresent(
-                                    //Keyword found from list
-                                    kw -> {
-                                        //Updating keyword count from reference count object
-                                        kw.setSwissProtCount(rc.getSwissProtCount());
-                                        kw.setTremblCount(rc.getTremblCount());
-                                        //Get the keyword's category
-                                        Optional.ofNullable(kw.getCategory()).ifPresent(
-                                                //Category found on keyword
-                                                c -> {
-                                                    //updating category count
-                                                    c.setTremblCount(c.getTremblCount() + rc.getTremblCount());
-                                                    c.setSwissProtCount(c.getSwissProtCount() + rc.getSwissProtCount());
-                                                }
-                                        );
-                                    }
-                            );
-                }
+                // Find the keyword from keyword list
+                rc -> keywordList.stream().filter(k -> k.getAccession().equals(rc.getAccession())).findFirst()
+                        .ifPresent(
+                                //Keyword or category found from list
+                                kw -> {
+                                    //Updating keyword or category count from reference count object
+                                    kw.setSwissProtCount(rc.getSwissProtCount());
+                                    kw.setTremblCount(rc.getTremblCount());
+                                }
+                        )
+
         );
     }
 }

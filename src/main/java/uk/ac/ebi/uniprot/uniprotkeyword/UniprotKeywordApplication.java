@@ -25,7 +25,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 @SpringBootApplication
 public class UniprotKeywordApplication {
 
-    private final static Logger LOG = LoggerFactory.getLogger(UniprotKeywordApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UniprotKeywordApplication.class);
 
     public static void main(String[] args) {
 
@@ -33,7 +33,7 @@ public class UniprotKeywordApplication {
                 Stream.of(args).filter(s -> !s.equalsIgnoreCase("--stopserver")).collect(Collectors.toList());
 
         // user wants to import new data, Delete existing database
-        if (argList.size() >= 1) {
+        if (!argList.isEmpty()) {
             deleteExistingDatabase();
         }
 
@@ -73,10 +73,11 @@ public class UniprotKeywordApplication {
 
             // Start delete if only path exists
             if (rootPath != null && Files.exists(rootPath)) {
-                Files.walk(rootPath, FileVisitOption.FOLLOW_LINKS)
-                        .sorted(Comparator.reverseOrder())
-                        .map(Path::toFile)
-                        .forEach(File::delete);
+                try (Stream<Path> paths = Files.walk(rootPath, FileVisitOption.FOLLOW_LINKS)) {
+                    paths.sorted(Comparator.reverseOrder())
+                            .map(Path::toFile)
+                            .forEach(File::delete);
+                }
             }
 
         } catch (IOException e) {
