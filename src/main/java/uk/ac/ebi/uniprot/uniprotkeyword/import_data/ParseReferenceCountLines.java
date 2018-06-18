@@ -3,12 +3,16 @@ package uk.ac.ebi.uniprot.uniprotkeyword.import_data;
 import uk.ac.ebi.uniprot.uniprotkeyword.dto.KeywordReferenceCount;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ParseReferenceCountLines {
 
     private static final String SEPARATOR = ",";
+    private static final String QOUTES = "\"";
+    private static final String EMPTY = "";
     private static final int SWISSPROT = 0;
     private static final int TREMBL = 1;
     private static final Logger LOG = LoggerFactory.getLogger(ParseReferenceCountLines.class);
@@ -24,9 +28,9 @@ public class ParseReferenceCountLines {
         for (String line : lines) {
             if (isValidRecord(line)) {
                 final String[] ref = line.split(SEPARATOR);
-                final String accession = ref[0].trim();
-                final int type = Integer.parseInt(ref[1].trim());
-                final Long count = Long.valueOf(ref[2].trim());
+                final String accession = ref[0].trim().replace(QOUTES, EMPTY);
+                final int type = Integer.parseInt(ref[1].trim().replace(QOUTES, EMPTY));
+                final Long count = Long.valueOf(ref[2].trim().replace(QOUTES, EMPTY));
 
                 tempMap.merge(accession, getKeywordReferenceCountObject(accession, type, count), this::merge);
             } else {
@@ -62,7 +66,7 @@ public class ParseReferenceCountLines {
             return false;
         }
 
-        String[] tokens = line.split(SEPARATOR);
+        String[] tokens = Stream.of(line.split(SEPARATOR)).map(t -> t.replace(QOUTES, EMPTY)).toArray(String[]::new);
 
         if (tokens[0] == null || tokens[0].trim().isEmpty()) {
             return false;
