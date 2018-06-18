@@ -15,6 +15,7 @@ Standalone application, you need java8 and maven to startup.
 * jackson 2.9.5
 * assertj 3.9.1
 * docker 17.12
+* Swagger 2 with Springfox
 
 ## Getting started
 1. Download keyword data file from ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/docs/keywlist.txt on local file system
@@ -36,6 +37,8 @@ http://localhost:8080/accession/KW-0001 | Return the single keyword entry with a
 http://localhost:8080/identifier/3D-structure | Return single keyword entry with all depth relationships exact match on identifier=3D-structure with case-sensitive
 http://localhost:8080/identifier/all/2s | Returns the collection of all the matching keywords which contains the "2s" after ignoring case in identifiers. Return elements in list will resolve relationships at depth 1
 http://localhost:8080/search/2s 4s | Returns the unique collection of all the matching keywords which contains the "2s" or "4s" after ignoring case in identifier or accession or synonyms or definition. Return elements in collection will contain relationships at depth level 1
+http://localhost:8080/v2/api-docs | API documentation in JSON format
+http://localhost:8080/swagger-ui.html | API documentation for user (Web-UI)
 
 ## Getting started with Docker
 You can build image [locally](docker) as well as use docker hub to pull image.
