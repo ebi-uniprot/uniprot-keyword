@@ -16,7 +16,7 @@ public interface KeywordRepository extends Neo4jRepository<Keyword, Long> {
     @Query("MATCH (n:Keyword{accession:{0}}) WITH n MATCH p=(n)-[*0..]->() RETURN p")
     List<Keyword> findByAccession(String accession);
 
-    @Query("MATCH (n:Keyword{identifier:{identifier}}) WITH n MATCH p=(n)-[*0..]->() RETURN p")
+    @Query("MATCH (n:Keyword) where LOWER(n.identifier) = LOWER({identifier}) WITH n MATCH p=(n)-[*0..]->() RETURN p")
     List<Keyword> findByIdentifier(@Param("identifier") String identifier);
 
     Collection<Keyword> findByIdentifierIgnoreCaseLike(@Param("identifier") String identifier);

@@ -111,11 +111,11 @@ class KeywordRepositoryTest {
     }
 
     @Test
-    void identifierCaseChangeWillNotWork() {
-        final String identifier = "2fe-2S";
+    void identifierMatchShouldBeCaseInSensitive() {
+        final String identifier = "ligand";
         final List<Keyword> retList = repo.findByIdentifier(identifier);
 
-        assertThat(retList).isNotNull().hasSize(0);
+        assertThat(retList).isNotNull().hasSize(1);
     }
 
     @Test

@@ -34,7 +34,7 @@ Standalone application, you need java8 and maven to startup.
 Endpoint | Description
 -------- | -----------
 http://localhost:8080/accession/KW-0001 | Return the single keyword entry with all depth relationships exact match on accession=KW-0001
-http://localhost:8080/identifier/3D-structure | Return single keyword entry with all depth relationships exact match on identifier=3D-structure with case-sensitive
+http://localhost:8080/identifier/3d-structure | Return single keyword entry with all depth relationships exact match on identifier=3d-structure with ignoring case (case-insensitive)
 http://localhost:8080/identifier/all/2s | Returns the collection of all the matching keywords which contains the "2s" after ignoring case in identifiers. Return elements in list will resolve relationships at depth 1
 http://localhost:8080/search/2s 4s | Returns the unique collection of all the matching keywords which contains the "2s" or "4s" after ignoring case in identifier or accession or synonyms or definition. Return elements in collection will contain relationships at depth level 1
 http://localhost:8080/v2/api-docs | API documentation in JSON format
