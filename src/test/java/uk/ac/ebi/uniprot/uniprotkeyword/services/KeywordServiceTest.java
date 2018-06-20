@@ -6,6 +6,7 @@ import uk.ac.ebi.uniprot.uniprotkeyword.repositories.KeywordRepository;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,7 +58,7 @@ class KeywordServiceTest {
 
     @Test
     void findByIdentifierIgnoreCaseLikeShouldAddStarInParam() {
-        when(repo.findByIdentifierIgnoreCaseLike(eq("*i*"))).thenReturn(data);
+        when(repo.findByIdentifierRegex(refEq(Pattern.compile("(?i).*\\bi\\b.*")))).thenReturn(data);
         Collection<Keyword> retCol = keywordService.findByIdentifierIgnoreCaseLike("i");
         assertNotNull(retCol);
         assertEquals(3, retCol.size());
@@ -71,32 +72,32 @@ class KeywordServiceTest {
 
     @Test
     public void testKeywordSearch() {
-        String input = "*inner*";
+        Pattern input = Pattern.compile("(?i).*\\bprotein\\b.*");
         doReturn(data.subList(0, 1)).when(repo)
-                .findByIdentifierIgnoreCaseLikeOrAccessionIgnoreCaseLikeOrSynonymsIgnoreCaseLikeOrDefinitionIgnoreCaseLike(
-                        eq(input), eq(input), eq(input), eq(input));
+                .findByIdentifierRegexOrAccessionRegexOrSynonymsRegexOrDefinitionRegex(
+                        refEq(input), refEq(input), refEq(input), refEq(input));
 
-        input = "*man*";
+        input = Pattern.compile("(?i).*\\bman\\b.*");
         doReturn(data.subList(1, 2)).when(repo)
-                .findByIdentifierIgnoreCaseLikeOrAccessionIgnoreCaseLikeOrSynonymsIgnoreCaseLikeOrDefinitionIgnoreCaseLike(
-                        eq(input), eq(input), eq(input), eq(input));
+                .findByIdentifierRegexOrAccessionRegexOrSynonymsRegexOrDefinitionRegex(
+                        refEq(input), refEq(input), refEq(input), refEq(input));
 
-        input = "*outer*";
+        input = Pattern.compile("(?i).*\\bkw-9996\\b.*");
         doReturn(data.subList(2, 3)).when(repo)
-                .findByIdentifierIgnoreCaseLikeOrAccessionIgnoreCaseLikeOrSynonymsIgnoreCaseLikeOrDefinitionIgnoreCaseLike(
-                        eq(input), eq(input), eq(input), eq(input));
+                .findByIdentifierRegexOrAccessionRegexOrSynonymsRegexOrDefinitionRegex(
+                        refEq(input), refEq(input), refEq(input), refEq(input));
 
-        input = "*not*";
+        input = Pattern.compile("(?i).*\\bnot\\b.*");
         doReturn(data.subList(0, 1)).when(repo)
-                .findByIdentifierIgnoreCaseLikeOrAccessionIgnoreCaseLikeOrSynonymsIgnoreCaseLikeOrDefinitionIgnoreCaseLike(
-                        eq(input), eq(input), eq(input), eq(input));
+                .findByIdentifierRegexOrAccessionRegexOrSynonymsRegexOrDefinitionRegex(
+                        refEq(input), refEq(input), refEq(input), refEq(input));
 
-        Collection<Keyword> retCol = keywordService.findAllByKeyWordSearch("inNer Outer INNER man noT");
+        Collection<Keyword> retCol = keywordService.findAllByKeyWordSearch("proTein KW-9996 PROTEIN man noT");
         assertNotNull(retCol);
-        assertEquals(3, retCol.size());
+        assertEquals(2, retCol.size());
 
         verify(repo, times(4))
-                .findByIdentifierIgnoreCaseLikeOrAccessionIgnoreCaseLikeOrSynonymsIgnoreCaseLikeOrDefinitionIgnoreCaseLike(
-                        anyString(), anyString(), anyString(), anyString());
+                .findByIdentifierRegexOrAccessionRegexOrSynonymsRegexOrDefinitionRegex(
+                        any(), any(), any(), any());
     }
 }

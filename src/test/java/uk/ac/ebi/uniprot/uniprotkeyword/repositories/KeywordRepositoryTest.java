@@ -3,6 +3,7 @@ package uk.ac.ebi.uniprot.uniprotkeyword.repositories;
 import uk.ac.ebi.uniprot.uniprotkeyword.domains.Keyword;
 import uk.ac.ebi.uniprot.uniprotkeyword.import_data.CombineKeywordReferenceCount;
 
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -19,8 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @DataNeo4jTest
 @ExtendWith(SpringExtension.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class KeywordRepositoryTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS) class KeywordRepositoryTest {
 
     private static final String ACCESSION_PROP = "accession";
 
@@ -126,6 +126,43 @@ class KeywordRepositoryTest {
                         input, input, input, input);
         assertNotNull(retCol);
         assertEquals(2, retCol.size());
+    }
+
+    @Test
+    void identifierWholeWordShouldMatch() {
+        Pattern p = Pattern.compile("(?i).*\\b2S\\b.*");
+        Collection<Keyword> result = repo.findByIdentifierRegex(p);
+        assertThat(result).isNotNull().hasSize(1);
+
+        //when identifier is not complete (2Fe-2S)
+        p = Pattern.compile("(?i).*\\bFe-2S\\b.*");
+        result = repo.findByIdentifierRegex(p);
+        assertThat(result).isNotNull().hasSize(0);
+    }
+
+    @Test
+    void identifierRegexResultShouldGetRelationAndCategory() {
+        final Pattern p = Pattern.compile("(?i).*\\b2fe-2s\\b.*");
+        final Collection<Keyword> result = repo.findByIdentifierRegex(p);
+
+        final Keyword k = result.stream().findFirst().orElse(null);
+        assertThat(k.getCategory()).isNotNull().extracting(ACCESSION_PROP).contains("KW-9993");
+        assertThat(k.getGoMappings().get(0)).isNotNull();
+        assertThat(k.getHierarchy()).isNotNull().hasSize(2);
+    }
+
+    @Test
+    void wordMatchInIdentifierAAccessionDefinitionSynonyms() {
+        Pattern p = Pattern.compile("(?i).*\\bsulfur\\b.*");
+        Collection<Keyword> retCol =
+                repo.findByIdentifierRegexOrAccessionRegexOrSynonymsRegexOrDefinitionRegex(p, p, p, p);
+        assertNotNull(retCol);
+        assertEquals(5, retCol.size());
+
+        p = Pattern.compile("(?i).*\\bulfur\\b.*");
+        retCol = repo.findByIdentifierRegexOrAccessionRegexOrSynonymsRegexOrDefinitionRegex(p, p, p, p);
+        assertNotNull(retCol);
+        assertEquals(0, retCol.size());
     }
 
 }

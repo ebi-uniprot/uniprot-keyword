@@ -4,6 +4,7 @@ import uk.ac.ebi.uniprot.uniprotkeyword.domains.Keyword;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +25,12 @@ public interface KeywordRepository extends Neo4jRepository<Keyword, Long> {
     Collection<Keyword>
     findByIdentifierIgnoreCaseLikeOrAccessionIgnoreCaseLikeOrSynonymsIgnoreCaseLikeOrDefinitionIgnoreCaseLike(
             String identifier, String accession, String synonyms, String definition);
+
+    @Query("MATCH (n:Keyword) WHERE n.identifier =~ {0} OR n.accession =~ {1} OR ANY(synonym IN n.synonyms WHERE " +
+            "synonym =~ {2}) OR n.definition =~ {3} WITH n MATCH p=(n)-[*1..1]->() RETURN p")
+    Collection<Keyword>
+    findByIdentifierRegexOrAccessionRegexOrSynonymsRegexOrDefinitionRegex(
+            Pattern identifier, Pattern accession, Pattern synonyms, Pattern definition);
+
+    Collection<Keyword> findByIdentifierRegex(Pattern identifier);
 }
