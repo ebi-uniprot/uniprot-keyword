@@ -1,6 +1,7 @@
 package uk.ac.ebi.uniprot.uniprotkeyword.services;
 
 import uk.ac.ebi.uniprot.uniprotkeyword.domains.Keyword;
+import uk.ac.ebi.uniprot.uniprotkeyword.dto.KeywordAutoComplete;
 import uk.ac.ebi.uniprot.uniprotkeyword.repositories.KeywordRepository;
 
 import java.util.Arrays;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalAnswers.*;
@@ -71,7 +74,8 @@ class KeywordServiceTest {
     }
 
     @Test
-    public void testKeywordSearch() {
+
+    void testKeywordSearch() {
         Pattern input = Pattern.compile("(?i).*\\bprotein\\b.*");
         doReturn(data.subList(0, 1)).when(repo)
                 .findByIdentifierRegexOrAccessionRegexOrSynonymsRegexOrDefinitionRegex(
@@ -99,5 +103,33 @@ class KeywordServiceTest {
         verify(repo, times(4))
                 .findByIdentifierRegexOrAccessionRegexOrSynonymsRegexOrDefinitionRegex(
                         any(), any(), any(), any());
+    }
+
+    @Test
+    void autoCompleteShouldCallPaginationWithDefault10WhenPassingSizeNull(){
+        when(repo.findProjectedByIdentifierIgnoreCaseLike(anyString(), refEq(PageRequest.of(0,10)))).thenReturn
+                (Page.empty());
+        final List<KeywordAutoComplete> retList = keywordService.autoCompleteSearch("s", null);
+    }
+
+    @Test
+    void autoCompleteShouldCallPaginationWithDefault10WhenPassingSize0(){
+        when(repo.findProjectedByIdentifierIgnoreCaseLike(anyString(), refEq(PageRequest.of(0,10)))).thenReturn
+                (Page.empty());
+        final List<KeywordAutoComplete> retList = keywordService.autoCompleteSearch("s", 0);
+    }
+
+    @Test
+    void autoCompleteShouldCallPaginationWithIntegerMaxWhenPassingSizeMinusValue(){
+        when(repo.findProjectedByIdentifierIgnoreCaseLike(anyString(), refEq(PageRequest.of(0,Integer.MAX_VALUE)))).thenReturn
+                (Page.empty());
+        final List<KeywordAutoComplete> retList = keywordService.autoCompleteSearch("s", -1);
+    }
+
+    @Test
+    void autoCompleteWhenPassingPositiveValue(){
+        when(repo.findProjectedByIdentifierIgnoreCaseLike(eq("*s*"), refEq(PageRequest.of(0,5))))
+                .thenReturn(Page.empty());
+        final List<KeywordAutoComplete> retList = keywordService.autoCompleteSearch("s", 5);
     }
 }

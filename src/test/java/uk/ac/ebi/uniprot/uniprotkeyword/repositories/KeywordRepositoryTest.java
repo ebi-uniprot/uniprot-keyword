@@ -1,6 +1,7 @@
 package uk.ac.ebi.uniprot.uniprotkeyword.repositories;
 
 import uk.ac.ebi.uniprot.uniprotkeyword.domains.Keyword;
+import uk.ac.ebi.uniprot.uniprotkeyword.dto.KeywordAutoComplete;
 import uk.ac.ebi.uniprot.uniprotkeyword.import_data.CombineKeywordReferenceCount;
 
 import java.util.regex.Pattern;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.neo4j.DataNeo4jTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collection;
@@ -23,6 +25,7 @@ import static org.assertj.core.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) class KeywordRepositoryTest {
 
     private static final String ACCESSION_PROP = "accession";
+    private static final String IDENTIFIER_PROP = "identifier";
 
     @Autowired
     private KeywordRepository repo;
@@ -163,6 +166,19 @@ import static org.assertj.core.api.Assertions.*;
         retCol = repo.findByIdentifierRegexOrAccessionRegexOrSynonymsRegexOrDefinitionRegex(p, p, p, p);
         assertNotNull(retCol);
         assertEquals(0, retCol.size());
+    }
+
+    @Test
+    void autoCompleteAndPaginationChecks() {
+        final String id = "*ron*";
+        List<KeywordAutoComplete> result = repo.findProjectedByIdentifierIgnoreCaseLike(id, PageRequest.of(0, 1))
+                .getContent();
+        assertThat(result).isNotNull().hasSize(1);
+
+        result = repo.findProjectedByIdentifierIgnoreCaseLike(id, PageRequest.of(0, 10)).getContent();
+        assertThat(result).isNotNull().hasSize(2);
+
+        assertThat(result).extracting(IDENTIFIER_PROP).contains("Iron-sulfur","Iron");
     }
 
 }

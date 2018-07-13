@@ -1,6 +1,7 @@
 package uk.ac.ebi.uniprot.uniprotkeyword.services;
 
 import uk.ac.ebi.uniprot.uniprotkeyword.domains.Keyword;
+import uk.ac.ebi.uniprot.uniprotkeyword.dto.KeywordAutoComplete;
 import uk.ac.ebi.uniprot.uniprotkeyword.import_data.CombineKeywordReferenceCount;
 import uk.ac.ebi.uniprot.uniprotkeyword.repositories.KeywordRepository;
 
@@ -9,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,4 +105,13 @@ public class KeywordService {
         return stringPatternMatch(s, p);
     }
 
+    @Transactional(readOnly = true)
+    public List<KeywordAutoComplete> autoCompleteSearch(String search, Integer returnSize) {
+        final int limited =
+                returnSize == null || returnSize == 0 ? 10 : returnSize < 0 ? Integer.MAX_VALUE : returnSize;
+        search = search == null ? "" : search.trim();
+        search = "*" + search + "*";
+        final Pageable pageable = PageRequest.of(0, limited);
+        return keywordRepository.findProjectedByIdentifierIgnoreCaseLike(search, pageable).getContent();
+    }
 }

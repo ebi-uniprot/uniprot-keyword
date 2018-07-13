@@ -37,6 +37,7 @@ http://localhost:8080/accession/KW-0001 | Return the single keyword entry with a
 http://localhost:8080/identifier/3d-structure | Return single keyword entry with all depth relationships exact match on identifier=3d-structure with ignoring case (case-insensitive)
 http://localhost:8080/identifier/all/2s | Returns the collection of all the matching keywords which word "2s" after ignoring case in identifiers. Searching word (in this example "2s") should be complete and have correct spellings to hit match. Return elements in list will resolve relationships at depth 1
 http://localhost:8080/search/2s acid | Returns the unique collection of all the matching keywords which have words "2s" or "acid" after ignoring case in identifier or accession or synonyms or definition. Searching words (in this example "2s" and "acid" ) should be complete and have correct spellings to hit match. Return elements in collection will contain relationships at depth level 1
+http://localhost:8080/like/s?size=5 | Return a list of matching keywords which's identifier contain character "s". Returning elements contains only identifier and accession. Size is optional, if not present default return size of list will be 10
 http://localhost:8080/v2/api-docs | API documentation in JSON format
 http://localhost:8080/swagger-ui.html | API documentation for user (Web-UI)
 

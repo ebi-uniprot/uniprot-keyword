@@ -1,10 +1,14 @@
 package uk.ac.ebi.uniprot.uniprotkeyword.repositories;
 
 import uk.ac.ebi.uniprot.uniprotkeyword.domains.Keyword;
+import uk.ac.ebi.uniprot.uniprotkeyword.dto.KeywordAutoComplete;
 
+import java.net.ContentHandler;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
@@ -33,4 +37,6 @@ public interface KeywordRepository extends Neo4jRepository<Keyword, Long> {
             Pattern identifier, Pattern accession, Pattern synonyms, Pattern definition);
 
     Collection<Keyword> findByIdentifierRegex(Pattern identifier);
+
+    Page<KeywordAutoComplete> findProjectedByIdentifierIgnoreCaseLike(String search, Pageable pageable);
 }

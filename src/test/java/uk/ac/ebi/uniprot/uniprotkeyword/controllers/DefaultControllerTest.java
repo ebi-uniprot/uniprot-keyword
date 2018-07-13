@@ -1,11 +1,13 @@
 package uk.ac.ebi.uniprot.uniprotkeyword.controllers;
 
 import uk.ac.ebi.uniprot.uniprotkeyword.domains.Keyword;
+import uk.ac.ebi.uniprot.uniprotkeyword.dto.KeywordAutoComplete;
 import uk.ac.ebi.uniprot.uniprotkeyword.services.KeywordService;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -94,7 +96,7 @@ class DefaultControllerTest {
     }
 
     @Test
-    public void testSearchEndPoint() throws Exception {
+    void testSearchEndPoint() throws Exception {
 
         MvcResult rawRes = mockMvc.perform(get("/search/{wordSeperatedBySpace}", "any string OR any"))
                 .andExpect(status().isOk())
@@ -104,6 +106,37 @@ class DefaultControllerTest {
                 mapper.getTypeFactory().constructCollectionType(List.class, Keyword.class));
 
         assertThat(retList.size()).isEqualTo(3);
+    }
+
+    @Test
+    void likeEndPointForAutoCompleteWithOutSize() throws Exception {
+        given(keywordService.autoCompleteSearch("abc def", null)).willReturn(Collections.emptyList());
+
+        MvcResult rawRes = mockMvc.perform(get("/like/{wordCanBeSeperatedBySpace}", "abc def"))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    void likeEndPointForAutoCompleteWithSize() throws Exception {
+
+        given(keywordService.autoCompleteSearch("abc", 5)).willReturn(Arrays.asList(
+                new KeywordAutoComplete() {
+                    @Override public String getIdentifier() {
+                        return "Membrane";
+                    }
+
+                    @Override public String getAccession() {
+                        return "KW-0111";
+                    }
+                }
+        ));
+
+        MvcResult rawRes = mockMvc.perform(get("/like/abc?size=5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].identifier").value("Membrane"))
+                .andExpect(jsonPath("$[0].accession").value("KW-0111"))
+                .andReturn();
     }
 
 }

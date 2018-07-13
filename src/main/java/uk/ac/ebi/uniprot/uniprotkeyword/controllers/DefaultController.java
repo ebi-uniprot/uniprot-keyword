@@ -1,6 +1,7 @@
 package uk.ac.ebi.uniprot.uniprotkeyword.controllers;
 
 import uk.ac.ebi.uniprot.uniprotkeyword.domains.Keyword;
+import uk.ac.ebi.uniprot.uniprotkeyword.dto.KeywordAutoComplete;
 import uk.ac.ebi.uniprot.uniprotkeyword.services.KeywordService;
 
 import java.util.Collection;
@@ -37,5 +38,10 @@ public class DefaultController {
     @GetMapping("search/{wordSeperatedBySpace}")
     public Collection<Keyword> search(@PathVariable String wordSeperatedBySpace) {
         return keywordService.findAllByKeyWordSearch(wordSeperatedBySpace);
+    }
+
+    @GetMapping("like/{wordCanBeSeperatedBySpace}")
+    public Collection<KeywordAutoComplete> autoComplete(@PathVariable String wordCanBeSeperatedBySpace, Integer size) {
+        return keywordService.autoCompleteSearch(wordCanBeSeperatedBySpace, size);
     }
 }
